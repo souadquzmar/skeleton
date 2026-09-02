@@ -35,6 +35,21 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
+# Email
+MAILERS = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "OPTIONS": {
+            "host": "smtp.gmail.com",
+            "port": 587,
+            "username": env("EMAIL_HOST_USER"),
+            "password": env("EMAIL_HOST_PASSWORD"),
+            "use_tls": True,
+        },
+    },
+}
+
+DEFAULT_FROM_EMAIL = env("EMAIL_HOST_USER")
 
 # Application definition
 
@@ -47,11 +62,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.users',
     'drf_spectacular',
+    'apps.tasks',
+    'rest_framework',
+    'apps.authentication',
 ]
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -147,11 +168,6 @@ STATIC_URL = 'static/'
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
 
 # Source - https://stackoverflow.com/a/41597291
 # Posted by AdelaN
