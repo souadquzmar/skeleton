@@ -174,6 +174,3 @@ def get_client_ip(request):
 ```
 
 Unlike a general utility, this function depends on Django's request context.
-
-
-
